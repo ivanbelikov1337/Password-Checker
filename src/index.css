@@ -1,0 +1,21 @@
+main {
+  height: 100vh;
+  display: flex;
+}
+
+input {
+  margin-bottom: 20px;
+  padding: 10px;
+  font-size: 16px;
+  outline: none;
+  border: 1px gray solid;
+  border-radius: 5px;
+}
+
+div {
+  display: grid;
+  justify-content: center;
+  align-content:  center;
+  border-radius: 5px;
+
+}
