@@ -1,30 +1,27 @@
 type Signature = 'easy' | 'medium' | 'strong' | 'short' | 'empty'
 
-//In this fn we need a check and valid our pass, should return one of signature
+const checks = (password:string) => {
+    return [
+        /[!@#$%^&*(),.?":{}|<>]/.test(password),
+        /[a-zA-Z-а-юА-Ю]/.test(password),
+        /\d/.test(password),].filter(Boolean).length
+}
+
+
 const checkStrength = (password: string): Signature => {
-    const hasLetters = /[a-zA-Z-а-юА-Ю]/.test(password); //Check if pass has a letters
-    const hasDigits = /\d/.test(password); //Check if pass has any nums
-    const hasSymbols = /[!@#$%^&*(),.?":{}|<>]/.test(password); //Check if pass has any symbol
-
-
-    if (!password || password.trim() === "") return 'empty'
-    else if (password.length < 8) return 'short'
-    else if (hasLetters && hasDigits && hasSymbols) return 'strong';
-    else if ((hasLetters && hasDigits) || (hasLetters && hasSymbols) || (hasSymbols && hasDigits)) return 'medium';
-
-    return 'easy';
+    if (!password.trim()) return 'empty';
+    if (password.length < 8) return 'short';
+    return checks(password) === 3 ? 'strong' : checks(password) === 2 ? 'medium' : 'easy';
 };
 
-//Inside this fn we can pick one of a color gray, red, yellow, green
-// using our aforementioned fn validation checkStrength.
+const colorMap: Record<string, string[]> = {
+    empty: ['gray', 'gray', 'gray'],
+    short: ['red', 'red', 'red'],
+    easy: ['red', 'gray', 'gray'],
+    medium: ['yellow', 'yellow', 'gray'],
+    strong: ['green', 'green', 'green'],
+};
+
 export const getSectionColor = (section: number, password: string): string => {
-    const strength = checkStrength(password);
-
-    if (strength === 'empty') return 'gray';
-    else if (strength === 'short') return 'red';
-    else if (strength === 'easy') return section === 1 ? 'red' : 'gray';
-    else if (strength === 'medium') return section <= 2 ? 'yellow' : 'gray';
-    else if (strength === 'strong') return 'green';
-
-    return 'gray';
-};
+    return colorMap[checkStrength(password)]?.[section - 1] ?? 'gray';
+}
